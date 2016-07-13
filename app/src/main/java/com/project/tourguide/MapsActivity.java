@@ -110,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 == PackageManager.PERMISSION_GRANTED) {
 //            locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, r, r, mLocationListener);
 //            locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, r, r, mLocationListener);
-
+        // not working
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
 
