@@ -4,11 +4,14 @@ package com.project.tourguide;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+
+import android.location.LocationManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -31,10 +34,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationListener {
 
     private GoogleMap mMap;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
+    protected GoogleApiClient mGoogleApiClient;
+    protected Location mLastLocation;
+    protected Marker mCurrLocationMarker;
+    protected LocationRequest mLocationRequest;
+    protected LocationListener locationListener;
+    protected LocationManager locationManager;
+//    protected LocationClient mLocationClient;
+    protected android.location.LocationListener mLocationListener;
+//    LocationClient mLocationClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(Bundle bundle) {
-
+        long r = 0;
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
@@ -99,6 +108,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
+//            locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, r, r, mLocationListener);
+//            locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, r, r, mLocationListener);
+
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
 
@@ -121,6 +133,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
+        Log.d("CREATION","Latitude : "+location.getLatitude());
+        Log.d("CREATION","Longitude : "+location.getLongitude());
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
