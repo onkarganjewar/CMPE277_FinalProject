@@ -47,6 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected LocationRequest mLocationRequest;
     protected LocationListener locationListener;
     protected LocationManager locationManager;
+    protected double latitude, longitude;
     //    protected LocationClient mLocationClient;
     protected android.location.LocationListener mLocationListener;
 //    LocationClient mLocationClient;
@@ -184,7 +185,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             System.out.println("-------------------");
             HttpRequestFactory httpRequestFactory = createRequestFactory(transport);
             HttpRequest request = httpRequestFactory.buildGetRequest(new GenericUrl(PLACES_SEARCH_URL));
-            request.url.put("key", API_KEY);
+            request.url.put("key", "AIzaSyA-cie1yyy1kCSti1kPjqS3bnFO_LM0Kcs");
             request.url.put("location", latitude + "," + longitude);
             request.url.put("radius", 500);
             request.url.put("sensor", "false");
