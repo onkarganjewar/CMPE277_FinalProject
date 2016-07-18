@@ -27,10 +27,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+/*
 import org.apache.http.*;
 import com.google.android.gms.common.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
+*/
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -171,14 +173,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-        performsearch();
+  //      performsearch();
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
 
     }
-
+/*
     private void performsearch() {
         try {
             System.out.println("Perform Search ....");
@@ -206,10 +208,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             throw e;
         }
     }
-
+*/
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+    Log.d("CREATION", "Connection failed due to gps");
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
