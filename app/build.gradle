@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 'Google Inc.:Google APIs:23'
     buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.project.tourguide"
         minSdkVersion 18
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -18,13 +18,28 @@ android {
         }
     }
 }
-
+repositories {
+    mavenCentral()
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.0.0'
 //    compile 'com.google.android.gms:play-services:9.2.1'
+    compile 'com.foursquare:foursquare-android-oauth:1.0.3'
     compile 'com.google.android.gms:play-services-maps:9.2.1'
     compile 'com.google.android.gms:play-services-places:9.2.1'
     compile 'com.google.android.gms:play-services-location:9.2.1'
+    compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'com.yelp.clientlib:yelp-android:2.0.0'
+    // https://mvnrepository.com/artifact/org.scribe/scribe
+//    compile group: 'org.scribe', name: 'scribe', version: '1.3.5'
+    compile 'org.scribe:scribe:1.3.5'
+    // https://mvnrepository.com/artifact/com.beust/jcommander
+    compile group: 'com.beust', name: 'jcommander', version: '1.48'
+    compile 'com.android.support:cardview-v7:23.1.1'
 }

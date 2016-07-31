@@ -1,4 +1,4 @@
-package com.project.tourguide;
+package com.project.name;
 
 import org.junit.Test;
 
