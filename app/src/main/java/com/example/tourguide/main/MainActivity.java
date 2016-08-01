@@ -2,9 +2,7 @@ package com.example.tourguide.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,11 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import com.example.tourguide.business.BusinessModel;
 import com.example.tourguide.view.BusinessAdapter;
-import com.example.tourguide.view.DownloadImageTask;
 import com.project.name.R;
 
 import java.util.ArrayList;
@@ -25,36 +21,50 @@ import java.util.List;
 
 /**
  * Created by Onkar on 7/30/2016.
+ *
+ * Activity to display all the cards showing nearby attractions
  */
 public class MainActivity extends AppCompatActivity {
+
+
+    // list of fetched nearby attractions
+    private List<BusinessModel> myList = new ArrayList<BusinessModel>();
+
+    // views and layouts to hold and set the results-list
     private RecyclerView recyclerView;
-    private List<BusinessModel> locationList = new ArrayList<BusinessModel>();
     private BusinessAdapter mAdapter;
     private BusinessModel businessModel;
+    private LinearLayoutManager mLayoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // getting the list of results from MapView
+        Intent intent = getIntent();
+        myList = (intent.<BusinessModel>getParcelableArrayListExtra("MyObj"));
+//        locationList = intent.getParcelableArrayListExtra("MyObj");
+        // initialize all the elements of the view
+        _init();
+    }
+
+    private void _init() {
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("View Ratings");
+        getSupportActionBar().setTitle("Nearby Attractions");
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 //        recyclerView.setHasFixedSize(true);
-        Intent intent = getIntent();
-        ArrayList<BusinessModel> myList = (intent.<BusinessModel>getParcelableArrayListExtra("MyObj"));
-        locationList = intent.getParcelableArrayListExtra("MyObj");
-        Log.i("DEBUG","ReceivedLOCATIONLIST!!!! :- "+myList.get(1).getName());
-        BusinessModel.display(myList);
         mAdapter = new BusinessAdapter(myList,this.getApplicationContext());
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

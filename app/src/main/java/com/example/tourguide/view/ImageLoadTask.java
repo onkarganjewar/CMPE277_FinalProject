@@ -9,9 +9,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 /**
+ * class to download the image from given url
  * Created by Onkar on 7/31/2016.
- */public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+ */
+
+public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
     private String url;
     private ImageView imageView;

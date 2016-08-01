@@ -4,28 +4,17 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.nfc.Tag;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.tourguide.business.BusinessModel;
@@ -47,19 +36,23 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.name.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Activity to show the location of result in a MapView
+ * Created by Onkar on 7/31/2016.
+ */
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
+
+    // Map elements
     public GoogleMap map;
     public MapView mapView;
     protected GoogleApiClient mGoogleApiClient;
-    private Geocoder geocoder;
-    private CameraUpdate cameraUpdate;
 
     // Store current location only once
     private double _latitude, _longitude;
@@ -75,7 +68,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     // Tag to use for debug
     private static final String TAG = "MAP_ACTIVITY";
 
-
     // Location update intervals
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
     private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
@@ -89,23 +81,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
         _init(savedInstanceState);
         _initMap();
-        Intent intent = getIntent();
 
-        this.businessModelList =  intent.getParcelableArrayListExtra("MyObj");
-        Log.d(TAG,"In business model"+businessModelList.get(1).getName());
-        Log.d(TAG,"In business model"+businessModelList.get(2).getName());
-        Log.d(TAG,"In business model"+businessModelList.get(4).getName());
+        // receive the arraylist of results in order to be sent back
+        receiveIntents();
 
-
-        BusinessModel.display(businessModelList);
-        _longitude = intent.getDoubleExtra("longitude",0);
-        _latitude = intent.getDoubleExtra("latitude",0);
-
-        Log.d(TAG,"Latitude :- "+_latitude);
-        Log.d(TAG,"Longitude :- "+_longitude);
-        searchedName = intent.getStringExtra("name");
+        // put the marker on the map
         setMarkers(_latitude,_longitude,searchedName);
-        Log.d(TAG,"DONE");
+    }
+
+    private void receiveIntents() {
+        // TODO: Fix the issue with the back button
+        Intent intent = getIntent();
+        this.businessModelList =  intent.getParcelableArrayListExtra("MyObj");
+        _latitude  = intent.getDoubleExtra("latitude", 0);
+        _longitude = intent.getDoubleExtra("longitude",0);
+        searchedName = intent.getStringExtra("name");
     }
 
     public void setMarkers(double lat, double lng, String properAddress) {
@@ -148,7 +138,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map = mapView.getMap();
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         map.setMyLocationEnabled(true);
-//        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         try {
@@ -258,7 +247,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .setFastestInterval(FASTEST_INTERVAL);
         // Request location updates
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+            //
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -301,23 +290,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 Intent intent = new Intent(this.getApplicationContext(), MainActivity.class);
-                Log.d(TAG,"In business model PARCEABLE"+businessModelList.get(1).getName());
-                Log.d(TAG,"In business model"+businessModelList.get(2).getName());
-                Log.d(TAG,"In business model"+businessModelList.get(4).getName());
 
+                // Not able to send the list back to previous activity
                 intent.putParcelableArrayListExtra("MyObj", (ArrayList<BusinessModel>) businessModelList);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(intent);
-
-                NavUtils.navigateUpFromSameTask(this);
+//                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-    // Method for searchable interface
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
     }
 }

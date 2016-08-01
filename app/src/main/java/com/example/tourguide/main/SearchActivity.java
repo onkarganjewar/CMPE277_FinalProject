@@ -20,37 +20,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
 
+/**
+ *  sample activity to initiate the search
+ */
 public class SearchActivity extends AppCompatActivity {
 
-    YelpController yelpController;
-    private Button btnGo,btn;
-    private static TextView txtSearch;
+    // controller responsible for carrying out the search
+    private YelpController yelpController;
     private YelpAPI yelpAPI;
-    private List<BusinessModel> resultsList;
-    private BusinessModel businessModel;
-    private static final int PROGRESS = 0x1;
 
-    private ProgressBar mProgress;
-    private int mProgressStatus = 0;
+    // UI elements
+    private Button btnGo;
+
+    // progress dialog indicating "wait"
     private ProgressDialog progress;
-
-//    private android.os.Handler mHandler = new Handler();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        yelpController = new YelpController();
-        yelpAPI = yelpController.init();
+
+        // initialize the yelp controller
+        _initController();
+
+        // initialize UI elements
+        _init();
+    }
+
+    private void _init() {
+        // sample button to initiate search
         btnGo = (Button) findViewById(R.id.btnGo);
-        txtSearch = (TextView) findViewById(R.id.textView);
-        mProgress = (ProgressBar) findViewById(R.id.progress_bar);
         btnGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int returnVal = yelpController.performSearch(yelpAPI,getApplicationContext());
-                //progressbar
+                // initiate the asynchronous search on background thread
+                yelpController.performSearch(yelpAPI,getApplicationContext());
+
+                // show progress bar until the action completes
                 progress = new ProgressDialog(v.getContext());
                 progress.setTitle("Please Wait!!");
                 progress.setMessage("Wait!!");
@@ -59,5 +65,11 @@ public class SearchActivity extends AppCompatActivity {
                 progress.show();
             }
         });
+    }
+
+    private void _initController() {
+        // start the controller
+        yelpController = new YelpController();
+        yelpAPI = yelpController.init();
     }
 }
