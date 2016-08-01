@@ -40,6 +40,7 @@ public class BusinessModel implements Parcelable {
 
     public BusinessModel(Parcel in) {
 /*
+        // Method to convert String [] to string
         String temp = in.readString();
         char[] cArray = temp.toCharArray();
         for(char c : cArray){
