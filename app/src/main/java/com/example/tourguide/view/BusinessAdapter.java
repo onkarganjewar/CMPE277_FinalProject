@@ -1,11 +1,14 @@
 package com.example.tourguide.view;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +28,8 @@ import java.util.concurrent.Executor;
  */
 public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyViewHolder> {
 
+    private final Context context;
     private List<BusinessModel> locationList;
-
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -36,17 +39,21 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyView
         protected TextView vSurname;
         protected TextView vEmail;
         protected TextView vTitle;
+        private CardView cardView;
         protected ImageView coverImageView, likeImageView, shareImageView;
+
+
         public MyViewHolder(View v) {
             super(v);
             vName =  (TextView) v.findViewById(R.id.txtName);
             vSurname = (TextView)  v.findViewById(R.id.txtSurname);
             vEmail = (TextView)  v.findViewById(R.id.txtEmail);
             vTitle = (TextView) v.findViewById(R.id.title);
-            coverImageView = (ImageView) v.findViewById(R.id.thumbnail);
+            coverImageView = (ImageView) v.findViewById(R.id.coverImageView);
+            cardView = (CardView) v.findViewById(R.id.card_view);
+
             likeImageView = (ImageView) v.findViewById(R.id.likeImageView);
             shareImageView = (ImageView) v.findViewById(R.id.shareImageView);
-
             likeImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -59,9 +66,9 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyView
                         likeImageView.setImageResource(R.drawable.ic_like);
 //                        Toast.makeText(getActivity(),titleTextView.getText()+" removed from favourites",Toast.LENGTH_SHORT).show();
                     }
-
                 }
             });
+
 
 
 /*
@@ -86,11 +93,42 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyView
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public BusinessAdapter(List<BusinessModel> myDataset) {
-        locationList = myDataset;
+    @Override
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        final BusinessModel businessModel = locationList.get(position);
+
+        holder.coverImageView.setImageResource(businessModel.getImageResourceId());
+        new ImageLoadTask(businessModel.getImageUrl(), holder.coverImageView).execute();
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //implement onClick
+                Intent intent = new Intent(context,MapActivity.class);
+                intent.putExtra("name",businessModel.getName());
+                Log.d("BusinessAdapter","Latitude"+businessModel.getLatitude());
+                Log.d("BusinessAdapter","Longitude"+businessModel.getLongitude());
+                intent.putExtra("latitude",businessModel.getLatitude());
+                intent.putExtra("longitude",businessModel.getLongitude());
+
+                intent.putParcelableArrayListExtra("MyObj", (ArrayList<BusinessModel>) locationList);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.vName.setText(businessModel.getName());
+        holder.vSurname.setText(businessModel.getSnippetText());
+        holder.vEmail.setText(businessModel.getPhone());
+        holder.vTitle.setText(""+businessModel.getRating());
+//        holder.coverImageView.setTag(list.get(position).getImageResourceId());
+        holder.likeImageView.setTag(R.drawable.ic_like);
     }
 
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public BusinessAdapter(List<BusinessModel> myDataset, Context applicationContext) {
+        locationList = myDataset;
+        context = applicationContext;
+    }
 
     @Override
     public BusinessAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -98,22 +136,6 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyView
                 .inflate(R.layout.cardview_layout, parent, false);
 
         return new MyViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        BusinessModel ci = locationList.get(position);
-
-        holder.coverImageView.setImageResource(ci.getImageResourceId());
-//        new DownloadImageTask(holder.coverImageView.execute("http://java.sogeti.nl/JavaBlog/wp-content/uploads/2009/04/android_icon_256.png");
-        new ImageLoadTask(ci.getImageUrl(), holder.coverImageView).execute();
-        holder.vName.setText(ci.getName());
-        holder.vSurname.setText(ci.getSnippetText());
-        holder.vEmail.setText(ci.getPhone());
-        holder.vTitle.setText(ci.getRating() + " " + ci.getStatus());
-//        holder.coverImageView.setTag(list.get(position).getImageResourceId());
-        holder.likeImageView.setTag(R.drawable.ic_like);
-
     }
 
     @Override

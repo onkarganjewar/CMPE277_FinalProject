@@ -1,9 +1,13 @@
 package com.example.tourguide.yelp;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.tourguide.business.BusinessModel;
+import com.example.tourguide.main.MainActivity;
 import com.example.tourguide.view.DownloadImageTask;
 import com.project.name.R;
 import com.yelp.clientlib.connection.YelpAPI;
@@ -40,7 +44,8 @@ public class YelpController {
         return businessModelList;
     }
 
-    private static List<BusinessModel> businessModelList = new ArrayList<>();
+    private static List<BusinessModel> businessModelList = new ArrayList<BusinessModel>();
+
     private static String status = "";
     private String phone;
 
@@ -53,7 +58,7 @@ public class YelpController {
         return yelpAPI;
     }
 
-    public int performSearch(YelpAPI yelpAPI) {
+    public int performSearch(YelpAPI yelpAPI, final Context context) {
         String userKeywords = "";
         String []someSTringArray = {"active"};
         for(String eachValue : someSTringArray)
@@ -100,9 +105,17 @@ public class YelpController {
                     address = businesses.get(i).location().displayAddress();
                     description = businesses.get(i).snippetText();
                     int imageResourceId = R.drawable.cafe_theme;
-                    businessModelList.add(new BusinessModel(name,description,status,imageUrl,address,rating,phone,latitude,longitude,imageResourceId));
+                    BusinessModel newObject = new BusinessModel(name,description,status,imageUrl,address,rating,phone,latitude,longitude,imageResourceId);
+                    Log.d("new Object", newObject.getName());
+                    businessModelList.add(newObject);
+
                 }
-                BusinessModel.display(businessModelList);
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putParcelableArrayListExtra("MyObj", (ArrayList<BusinessModel>) businessModelList);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                //Log.d("businessModelList : -- ", ""+businessModelList);
+                //BusinessModel.display(businessModelList);
             }
 
             @Override
@@ -114,8 +127,6 @@ public class YelpController {
             }
         };
         call.enqueue(callback);
-        BusinessModel.display(businessModelList);
-        Log.d("DEBUG","List to return is"+businessModelList);
         return 0;
     }
 }

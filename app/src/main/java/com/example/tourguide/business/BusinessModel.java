@@ -12,16 +12,16 @@ import java.util.List;
  */
 public class BusinessModel implements Parcelable {
 
-    private static String imageUrl;
-    private static String name;
-    private static String status;
-    private static String snippetText;
-    private static int imageResourceId;
-    private static ArrayList<String> address;
-    private static double rating;
-    private static double latitude;
-    private static double longitude;
-    private static String phone;
+    private String imageUrl;
+    private String name;
+    private String status;
+    private String snippetText;
+    private int imageResourceId;
+    private ArrayList<String> address;
+    private double rating;
+    private double latitude;
+    private double longitude;
+    private String phone;
 
 
     public BusinessModel(String name, String desc, String status, String imageUrl, ArrayList<String> address, double rating, String phone, double latitude, double longitude, int imageResourceId) {
@@ -54,14 +54,16 @@ public class BusinessModel implements Parcelable {
         rating = in.readDouble();
         phone = in.readString();
         imageResourceId = in.readInt();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 
-    public static int getImageResourceId() {
+    public int getImageResourceId() {
         return imageResourceId;
     }
 
-    public static void setImageResourceId(int imageResourceId) {
-        BusinessModel.imageResourceId = imageResourceId;
+    public void setImageResourceId(int imageResourceId) {
+        this.imageResourceId = imageResourceId;
     }
 
     public static final Creator<BusinessModel> CREATOR = new Creator<BusinessModel>() {
@@ -80,8 +82,8 @@ public class BusinessModel implements Parcelable {
         return address;
     }
 
-    public static void setAddress(ArrayList<String> address) {
-        BusinessModel.address = address;
+    public void setAddress(ArrayList<String> address) {
+        this.address = address;
     }
 
     public String getImageUrl() {
@@ -89,7 +91,7 @@ public class BusinessModel implements Parcelable {
     }
 
     public void setImageUrl(String imageUrl) {
-        BusinessModel.imageUrl = imageUrl;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -97,7 +99,7 @@ public class BusinessModel implements Parcelable {
     }
 
     public void setName(String name) {
-        BusinessModel.name = name;
+        this.name = name;
     }
 
     public String getStatus() {
@@ -105,7 +107,7 @@ public class BusinessModel implements Parcelable {
     }
 
     public void setStatus(String status) {
-        BusinessModel.status = status;
+        this.status = status;
     }
 
     public String getSnippetText() {
@@ -113,39 +115,39 @@ public class BusinessModel implements Parcelable {
     }
 
     public void setSnippetText(String snippetText) {
-        BusinessModel.snippetText = snippetText;
+        this.snippetText = snippetText;
     }
 
-    public static double getRating() {
-        return rating;
+    public double getRating() {
+        return this.rating;
     }
 
-    public static void setRating(double rating) {
-        BusinessModel.rating = rating;
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
-    public static double getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public static void setLatitude(double latitude) {
-        BusinessModel.latitude = latitude;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public static double getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public static void setLongitude(double longitude) {
-        BusinessModel.longitude = longitude;
+    public  void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public static String getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public static void setPhone(String phone) {
-        BusinessModel.phone = phone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override
@@ -163,6 +165,8 @@ public class BusinessModel implements Parcelable {
         dest.writeDouble(rating);
         dest.writeString(phone);
         dest.writeInt(imageResourceId);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
     
     public static void display(List<BusinessModel> list) {
