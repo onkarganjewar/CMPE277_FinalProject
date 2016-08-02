@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        recyclerView.setHasFixedSize(true);
         mAdapter = new BusinessAdapter(myList,this.getApplicationContext());
-        mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

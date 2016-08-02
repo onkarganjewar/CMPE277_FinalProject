@@ -41,4 +41,5 @@ dependencies {
     // https://mvnrepository.com/artifact/com.beust/jcommander
     compile group: 'com.beust', name: 'jcommander', version: '1.48'
     compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.uber.sdk:rides-android:0.5.2'
 }

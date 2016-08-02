@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -16,9 +17,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.tourguide.business.BusinessModel;
 import com.example.tourguide.main.MainActivity;
+import com.example.tourguide.uber.UberController;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -35,8 +40,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.name.R;
+import com.uber.sdk.android.rides.RideParameters;
+import com.uber.sdk.android.rides.RideRequestButton;
+import com.uber.sdk.android.rides.RideRequestButtonCallback;
+import com.uber.sdk.core.auth.Scope;
+import com.uber.sdk.rides.client.ServerTokenSession;
+import com.uber.sdk.rides.client.SessionConfiguration;
+import com.uber.sdk.rides.client.error.ApiError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,15 +60,20 @@ import java.util.List;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener, RideRequestButtonCallback {
 
     // Map elements
     public GoogleMap map;
     public MapView mapView;
+    public Button btnDirections;
     protected GoogleApiClient mGoogleApiClient;
 
     // Store current location only once
-    private double _latitude, _longitude;
+    private static double _latitude, _longitude;
+
+    // store received intents
+    static double destinationLat;
+    static double destinationLng;
 
     // Variables to get current location
     protected Location mLastLocation;
@@ -74,6 +92,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LocationManager locationManager;
     private String searchedName= "";
     private List<BusinessModel> businessModelList = new ArrayList<BusinessModel>();
+    private RideRequestButton requestButton;
+    private SessionConfiguration configuration;
+    private String[] searchedAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,21 +102,68 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
         _init(savedInstanceState);
         _initMap();
-
         // receive the arraylist of results in order to be sent back
         receiveIntents();
-
+//        initializeUber();
+        setActionListeners();
         // put the marker on the map
-        setMarkers(_latitude,_longitude,searchedName);
+        setMarkers(destinationLat,destinationLng,searchedName);
+    }
+
+   /* private void initializeUber() {
+        ServerTokenSession session = new ServerTokenSession(configuration);
+
+        RideParameters rideParametersForProduct = new RideParameters.Builder()
+                .setProductId(UBERX_PRODUCT_ID)
+                .setPickupLocation(PICKUP_LAT, PICKUP_LONG, PICKUP_NICK, PICKUP_ADDR)
+                .setDropoffLocation(DROPOFF_LAT, DROPOFF_LONG, DROPOFF_NICK, DROPOFF_ADDR)
+                .build();
+
+        // This button demonstrates deep-linking to the Uber app (default button behavior).
+        blackButton = (RideRequestButton) findViewById(R.id.uber_button_black);
+        blackButton.setRideParameters(rideParametersForProduct);
+        blackButton.setSession(session);
+        blackButton.setCallback(this);
+        blackButton.loadRideInformation();
+
+        RideParameters rideParametersCheapestProduct = new RideParameters.Builder()
+                .setPickupLocation(PICKUP_LAT, PICKUP_LONG, PICKUP_NICK, PICKUP_ADDR)
+                .setDropoffLocation(DROPOFF_LAT, DROPOFF_LONG, DROPOFF_NICK, DROPOFF_ADDR)
+                .build();
+
+    }
+*/
+    private void setActionListeners() {
+    btnDirections.setOnClickListener(this.getDirections());
+    }
+
+    private View.OnClickListener getDirections() {
+
+        View.OnClickListener viewListener  = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uriString = "http://maps.google.com/maps?saddr="+_latitude+","+_longitude+"&daddr="+destinationLat+","+destinationLng+"&dirflg=d&layer=t";
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse(uriString));
+                Log.i(TAG,uriString);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER );
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                startActivity(intent);
+            }
+        };
+        return viewListener;
     }
 
     private void receiveIntents() {
         // TODO: Fix the issue with the back button
         Intent intent = getIntent();
         this.businessModelList =  intent.getParcelableArrayListExtra("MyObj");
-        _latitude  = intent.getDoubleExtra("latitude", 0);
-        _longitude = intent.getDoubleExtra("longitude",0);
+        destinationLat  = intent.getDoubleExtra("latitude", 0);
+        destinationLng = intent.getDoubleExtra("longitude",0);
         searchedName = intent.getStringExtra("name");
+        searchedAddress = intent.getStringArrayExtra("address");
+        Log.i(TAG,"Address######"+searchedAddress);
     }
 
     public void setMarkers(double lat, double lng, String properAddress) {
@@ -115,6 +183,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     // Initialize and build layout
     private void _init(Bundle savedInstanceState) {
+        configuration = new SessionConfiguration.Builder()
+                .setClientId("1EkCP3cRwDjBQdkaFk-N4xGqrOKeZI0P") //client secret --> NqPafWqTYfWeJpE8B2Ubv9hQyQ_oN9nTbHAtt2bn
+                .setRedirectUri("https://www.google.com/") //This is necessary if you'll be using implicit grant
+                .setEnvironment(SessionConfiguration.Environment.SANDBOX) //Useful for testing your app in the sandbox environment
+                .setScopes(Arrays.asList(Scope.PROFILE, Scope.RIDE_WIDGETS)) //Your scopes for authentication here
+                .build();
+//        UberController.initialize(configuration);
+
+        btnDirections = (Button) findViewById(R.id.btnDirections);
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         buildGoogleApiClient();
@@ -138,7 +215,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map = mapView.getMap();
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         map.setMyLocationEnabled(true);
-
+        map.getUiSettings().setMapToolbarEnabled(false);
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         try {
             MapsInitializer.initialize(this);
@@ -301,4 +378,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void onRideInformationLoaded() {
+        Toast.makeText(this, "Estimates have been refreshed", Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onError(ApiError apiError) {
+        Toast.makeText(this, apiError.getClientErrors().get(0).getTitle(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+        Log.e("SampleActivity", "Error obtaining Metadata", throwable);
+        Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
+    }
+
 }

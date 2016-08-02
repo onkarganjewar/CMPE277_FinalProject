@@ -132,6 +132,7 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyView
                 Intent intent = new Intent(context,MapActivity.class);
 
                 // information to set the marker options
+                intent.putStringArrayListExtra("address",businessModel.getAddress());
                 intent.putExtra("name",businessModel.getName());
                 intent.putExtra("latitude",businessModel.getLatitude());
                 intent.putExtra("longitude",businessModel.getLongitude());
