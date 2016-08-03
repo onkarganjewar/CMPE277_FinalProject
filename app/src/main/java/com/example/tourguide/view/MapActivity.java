@@ -1,5 +1,6 @@
 package com.example.tourguide.view;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,7 +41,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.project.name.R;
+import com.example.tourguide.R;
 import com.uber.sdk.android.rides.RideParameters;
 import com.uber.sdk.android.rides.RideRequestButton;
 import com.uber.sdk.android.rides.RideRequestButtonCallback;
@@ -57,7 +59,7 @@ import java.util.List;
  * Created by Onkar on 7/31/2016.
  */
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback,
+public class MapActivity extends android.support.v4.app.FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, RideRequestButtonCallback {
@@ -90,7 +92,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
     private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
     private LocationManager locationManager;
-    private String searchedName= "";
+    private String searchedName = "";
     private List<BusinessModel> businessModelList = new ArrayList<BusinessModel>();
     private RideRequestButton requestButton;
     private SessionConfiguration configuration;
@@ -107,47 +109,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //        initializeUber();
         setActionListeners();
         // put the marker on the map
-        setMarkers(destinationLat,destinationLng,searchedName);
-    }
-
-   /* private void initializeUber() {
-        ServerTokenSession session = new ServerTokenSession(configuration);
-
-        RideParameters rideParametersForProduct = new RideParameters.Builder()
-                .setProductId(UBERX_PRODUCT_ID)
-                .setPickupLocation(PICKUP_LAT, PICKUP_LONG, PICKUP_NICK, PICKUP_ADDR)
-                .setDropoffLocation(DROPOFF_LAT, DROPOFF_LONG, DROPOFF_NICK, DROPOFF_ADDR)
-                .build();
-
-        // This button demonstrates deep-linking to the Uber app (default button behavior).
-        blackButton = (RideRequestButton) findViewById(R.id.uber_button_black);
-        blackButton.setRideParameters(rideParametersForProduct);
-        blackButton.setSession(session);
-        blackButton.setCallback(this);
-        blackButton.loadRideInformation();
-
-        RideParameters rideParametersCheapestProduct = new RideParameters.Builder()
-                .setPickupLocation(PICKUP_LAT, PICKUP_LONG, PICKUP_NICK, PICKUP_ADDR)
-                .setDropoffLocation(DROPOFF_LAT, DROPOFF_LONG, DROPOFF_NICK, DROPOFF_ADDR)
-                .build();
 
     }
-*/
     private void setActionListeners() {
-    btnDirections.setOnClickListener(this.getDirections());
+        btnDirections.setOnClickListener(this.getDirections());
     }
 
     private View.OnClickListener getDirections() {
 
-        View.OnClickListener viewListener  = new View.OnClickListener() {
+        View.OnClickListener viewListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uriString = "http://maps.google.com/maps?saddr="+_latitude+","+_longitude+"&daddr="+destinationLat+","+destinationLng+"&dirflg=d&layer=t";
+                String uriString = "http://maps.google.com/maps?saddr=" + _latitude + "," + _longitude + "&daddr=" + destinationLat + "," + destinationLng + "&dirflg=d&layer=t";
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse(uriString));
-                Log.i(TAG,uriString);
+                Log.i(TAG, uriString);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER );
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                 startActivity(intent);
             }
@@ -158,18 +136,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void receiveIntents() {
         // TODO: Fix the issue with the back button
         Intent intent = getIntent();
-        this.businessModelList =  intent.getParcelableArrayListExtra("MyObj");
-        destinationLat  = intent.getDoubleExtra("latitude", 0);
-        destinationLng = intent.getDoubleExtra("longitude",0);
+        this.businessModelList = intent.getParcelableArrayListExtra("MyObj");
+        destinationLat = intent.getDoubleExtra("latitude", 0);
+        destinationLng = intent.getDoubleExtra("longitude", 0);
         searchedName = intent.getStringExtra("name");
         searchedAddress = intent.getStringArrayExtra("address");
-        Log.i(TAG,"Address######"+searchedAddress);
+        Log.i(TAG, "Address######" + searchedAddress);
     }
 
     public void setMarkers(double lat, double lng, String properAddress) {
 
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(lat,lng);
+        LatLng latLng = new LatLng(lat, lng);
         markerOptions.position(latLng);
         markerOptions.title(properAddress);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
@@ -178,7 +156,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Updates the location and zoom of the MapView
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18);
         map.animateCamera(cameraUpdate);
-   }
+    }
 
 
     // Initialize and build layout
@@ -194,17 +172,34 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         btnDirections = (Button) findViewById(R.id.btnDirections);
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.mapview);
+        mapFragment.getMapAsync(this);
         buildGoogleApiClient();
 //        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        if ((ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) && (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        map.setMyLocationEnabled(true);
+        map.getUiSettings().setMapToolbarEnabled(false);
+        setMarkers(destinationLat, destinationLng, searchedName);
+        // ...
     }
 
-
-
-
     // Check if the network is available
-    public boolean isNetworkAvailable(Context context)
-    {
+    public boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
@@ -212,27 +207,35 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     // Initialize and build GoogleMap
     private void _initMap() {
-        map = mapView.getMap();
-        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        map.setMyLocationEnabled(true);
-        map.getUiSettings().setMapToolbarEnabled(false);
+//        map = mapView.getMap();
+
+        // Check for the version of android and request permission if lesser
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         try {
             MapsInitializer.initialize(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Check for the version of android and request permission if lesser
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
-        }
-    }
 
+    }
 
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
@@ -268,11 +271,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG, "Connection failed due to gps");
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;

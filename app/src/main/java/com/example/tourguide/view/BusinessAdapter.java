@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tourguide.business.BusinessModel;
-import com.project.name.R;
+import com.example.tourguide.R;
 
 import java.util.ArrayList;
 import java.util.List;

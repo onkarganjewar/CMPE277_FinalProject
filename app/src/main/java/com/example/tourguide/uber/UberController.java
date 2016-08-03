@@ -1,6 +1,6 @@
 package com.example.tourguide.uber;
 
-import com.project.name.R;
+import com.example.tourguide.R;
 import com.uber.sdk.android.core.UberSdk;
 import com.uber.sdk.android.rides.BuildConfig;
 import com.uber.sdk.android.rides.RideParameters;

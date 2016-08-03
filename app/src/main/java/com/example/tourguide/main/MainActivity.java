@@ -12,9 +12,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.tourguide.R;
 import com.example.tourguide.business.BusinessModel;
 import com.example.tourguide.view.BusinessAdapter;
-import com.project.name.R;
 
 import java.util.ArrayList;
 import java.util.List;

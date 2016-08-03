@@ -3,10 +3,15 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 'Google Inc.:Google APIs:23'
     buildToolsVersion "23.0.3"
-
+    dexOptions {
+        incremental false
+        preDexLibraries = false
+        jumboMode = false
+        javaMaxHeapSize "4096M"
+    }
     defaultConfig {
-        applicationId "com.project.tourguide"
-        minSdkVersion 18
+        applicationId "com.example.tourguide"
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -27,14 +32,18 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
 //    compile 'com.google.android.gms:play-services:9.2.1'
     compile 'com.foursquare:foursquare-android-oauth:1.0.3'
-    compile 'com.google.android.gms:play-services-maps:8.1.0'
-    compile 'com.google.android.gms:play-services-location:8.1.0'
+    compile 'com.google.android.gms:play-services-maps:9.2.0'
+    compile 'com.google.android.gms:play-services-places:9.2.0'
+    compile 'com.google.android.gms:play-services-location:9.2.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.yelp.clientlib:yelp-android:2.0.0'
+//    compile 'com.google.firebase:firebase-core:9.2.0'
+//    compile 'com.google.firebase:firebase-auth:9.2.0'
+//    compile 'com.google.firebase:firebase-database:9.2.0'
     // https://mvnrepository.com/artifact/org.scribe/scribe
 //    compile group: 'org.scribe', name: 'scribe', version: '1.3.5'
     compile 'org.scribe:scribe:1.3.5'

@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.example.tourguide.business.BusinessModel;
 import com.example.tourguide.main.MainActivity;
-import com.project.name.R;
+import com.example.tourguide.R;
 import com.yelp.clientlib.connection.YelpAPI;
 import com.yelp.clientlib.connection.YelpAPIFactory;
 import com.yelp.clientlib.entities.Business;
@@ -76,7 +76,7 @@ public class YelpController {
     }
 
 
-    public int performSearch(YelpAPI yelpAPI, final Context context, String currentCity) {
+    public int performSearch(YelpAPI yelpAPI, final Context context, String currentCity, double _latitude, double _longitude) {
 
         // method to include multiple keywords for search
         String userKeywords = "beaches";
@@ -97,6 +97,9 @@ public class YelpController {
             Log.d("DEBUG",temp[j]);
             // locale params
             searchParams.put("lang", "en");
+            double tempLatitude = _latitude;
+            double tempLongitude = _longitude;
+
             Call<SearchResponse> call = yelpAPI.search(currentCity, searchParams);
             // asynch http request for search
             Callback<SearchResponse> callback = new Callback<SearchResponse>() {

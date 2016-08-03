@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">TourGuide</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="app_name">Project</string>
     <string name="menu_settings">Settings</string>
     <string name="connected_to_foursquare">Hey looks like you’re connected to Foursquare!</string>
     <string name="app_not_installed_message">To do this, you’ll need the latest version of Foursquare installed.</string>
+    <string name="title_project">TourGuide</string>
 
 </resources>
