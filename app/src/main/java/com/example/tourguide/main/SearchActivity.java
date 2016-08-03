@@ -1,10 +1,15 @@
 package com.example.tourguide.main;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -18,7 +23,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.tourguide.business.BusinessModel;
@@ -35,12 +43,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Handler;
+import java.util.Timer;
+import java.util.TimerTask;
+import android.os.Handler;
+import java.util.logging.LogRecord;
 
 /**
  *  sample activity to initiate the search
  */
-public class SearchActivity extends AppCompatActivity implements LocationListener {
+public class SearchActivity extends AppCompatActivity implements LocationListener{
 
     // controller responsible for carrying out the search
     private YelpController yelpController;
@@ -48,25 +59,108 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
     // UI elements
     private Button btnGo;
+    public static int count=0;
 
     // Variables to get current location
     protected Location mLastLocation;
     protected LocationRequest mLocationRequest;
     protected Marker mCurrLocationMarker;
+    Timer _t;
 
     // progress dialog indicating "wait"
     private ProgressDialog progress;
-
+    ImageView img;
+    final int [] setImg = {R.drawable.cafe_theme,R.drawable.likefb};
+    LinearLayout layout;
+    private static int counterInterval = 0;
+    int[] drawablearray=new int[]{R.drawable.likefb,R.drawable.cafe_theme};
     private String TAG = "Search_Activity";
     private String cityName;
     private String provider;
     private double _latitude, _longitude;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        layout = (LinearLayout) findViewById(R.id.myLinearLayout);
+
+/*
+        // Code to blur the images
+        LinearLayout linearLayout = new LinearLayout(this);
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1;
+        Bitmap blurTemplate = BitmapFactory.decodeResource(getResources(), R.drawable.travel, options);
+        Bitmap myBitmap = BlurBuilder.blur(getBaseContext(),blurTemplate);
+        BitmapDrawable myD = new BitmapDrawable(getBaseContext().getResources(), myBitmap);
+        linearLayout = (LinearLayout) findViewByID(R.id.mainlayout); //It depends of the name that you gave to it
+*/
+
+        _t = new Timer();
+        _t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() // run on ui thread
+                {
+                    public void run() {
+                        if (count < drawablearray.length) {
+                            layout.setBackgroundResource(drawablearray[count]);
+                            count = (count + 1) % drawablearray.length;
+                        }
+                    }
+                });
+            }
+        }, 5000, 5000);
+
+/*
+
+
+        linearLayout.setBackgroundResource(R.drawable.cafe_theme);
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                for (int i = 0; i < 2; ++i) {
+                    runOnUiThread(new Runnable() {
+                        public void run()
+                        {
+                            layout.setBackgroundResource(drawablearray[count]);
+                            // or ll.setBackgroundResource(resid) if you want.
+                            count += (count+1)%drawablearray.length;
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, 5000);
+*/
+
+/*
+        final Handler h = new Handler();
+        Runnable r = new Runnable() {
+            public void run() {
+                Home.this.getWindow().setBackgroundDrawableResource(drawablearray[count]);
+                count += (count+1)%drawablearray.length;  //<<< increment counter here
+                h.postDelayed(this, 5000);
+            }
+        };*/
+
+        /*      // changing images in ImageView periodically
+        setContentView(R.layout.activity_search);
+        final ImageView backgroundImageView = (ImageView) findViewById(R.id.backgroundImage);
+        backgroundImageView.postDelayed(new Runnable() {
+            public void run() {
+                backgroundImageView.setImageResource(
+                        counterInterval++ % 2 == 0 ?
+                                R.drawable.cafe_theme:
+                                R.drawable.likefb);
+                backgroundImageView.postDelayed(this, 1000);
+            }
+        }, 1000);*/
+
 
         // initialize the yelp controller
         _initController();

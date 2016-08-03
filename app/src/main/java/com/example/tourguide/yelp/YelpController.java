@@ -127,7 +127,7 @@ public class YelpController {
                         longitude = businesses.get(i).location().coordinate().longitude();
                         imageUrl = businesses.get(i).imageUrl();
                         boolean flag = businesses.get(i).isClosed();
-//                    businesses.get(1).
+
                         if (flag) {
                             status = "closed";
                         } else {
@@ -135,7 +135,7 @@ public class YelpController {
                         }
                         address = businesses.get(i).location().displayAddress();
                         description = businesses.get(i).snippetText();
-//                    message = "http://s3-media4.fl.yelpcdn.com/photo/t9sA0-vh8UVUJXAfww_bvQ/ms.jpg";
+
                         if (imageUrl!= null) {
                             len = imageUrl.length();
                             formattedUrl = imageUrl.substring(0, len - 6) + "o.jpg";
@@ -166,82 +166,6 @@ public class YelpController {
             };
             call.enqueue(callback);
         }
-
-
-//        Log.i("DEBUG",userKeywords);
-//        searchParams.put("limit", Integer.toString(searchLimit));
-//        searchParams.put("terms","arts,active");
-//        searchParams.put("terms",)
-
-
-        // currently set the value to San Francisco
-        // TODO: update the value as per the current location
-/*
-        Call<SearchResponse> call = yelpAPI.search(currentCity, searchParams);
-        // asynch http request for search
-        Callback<SearchResponse> callback = new Callback<SearchResponse>() {
-            @Override
-            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
-                SearchResponse searchResponse = response.body();
-
-                // local variables to hold the search results
-                String name, imageUrl ,description, formattedUrl;
-                int len;
-                ArrayList<String> address;
-                Double rating,latitude,longitude;
-
-                // Update UI text with the searchResponse.
-                businesses = searchResponse.businesses();
-                int size = searchResponse.businesses().size();
-                Log.d("DEBUG","SIZE: "+size);
-                for (int i=0; i<size; i++) {
-                    name = businesses.get(i).name();
-                    rating = businesses.get(i).rating();
-                    if (businesses.get(i).displayPhone() != "") {
-                        phone = businesses.get(i).phone();
-                    }
-                    latitude = businesses.get(i).location().coordinate().latitude();
-                    longitude = businesses.get(i).location().coordinate().longitude();
-                    imageUrl = businesses.get(i).imageUrl();
-                    boolean flag = businesses.get(i).isClosed();
-//                    businesses.get(1).
-                    if (flag) {
-                        status = "closed";
-                    } else {
-                        status = "open";
-                    }
-                    address = businesses.get(i).location().displayAddress();
-                    description = businesses.get(i).snippetText();
-//                    message = "http://s3-media4.fl.yelpcdn.com/photo/t9sA0-vh8UVUJXAfww_bvQ/ms.jpg";
-                    if (imageUrl!= null) {
-                        len = imageUrl.length();
-                        formattedUrl = imageUrl.substring(0, len - 6) + "o.jpg";
-                        imageUrl = formattedUrl;
-                        Log.i("DEBUG",formattedUrl);
-                    }// not able to implement it yet
-                    int imageResourceId = R.drawable.cafe_theme;
-
-                    // create the model for every location
-                    BusinessModel newObject = new BusinessModel(name,description,status,imageUrl,address,rating,phone,latitude,longitude,imageResourceId);
-                    businessModelList.add(newObject);
-                }
-                // start the new activity to display cards
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putParcelableArrayListExtra("MyObj", (ArrayList<BusinessModel>) businessModelList);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(Call<SearchResponse> call, Throwable t) {
-                // HTTP error happened, do something to handle it.
-                // Error
-                t.printStackTrace();
-            Log.d("DEBUG","SEARCH FAILED");
-            return;
-            }
-        };
-        call.enqueue(callback);*/
         return 0;
     }
 }
