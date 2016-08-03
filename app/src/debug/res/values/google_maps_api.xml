@@ -16,4 +16,22 @@
     string in this file.
     -->
     <!--<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCk6xfq4jFcg6Qlz5Nlhn2iUug8pndfIP8</string>-->
+
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=03:0B:B9:71:D5:4D:3E:93:91:B7:89:03:76:7A:93:FB:23:9E:5D:35%3Bcom.example.tourguide.main
+
+    You can also add your credentials to an existing key, using this line:
+    03:0B:B9:71:D5:4D:3E:93:91:B7:89:03:76:7A:93:FB:23:9E:5D:35;com.example.tourguide.main
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" translatable="false">AIzaSyCJcfI16Fp5rXV0tCYHrtacfJFJsS9gJ2o</string>
 </resources>

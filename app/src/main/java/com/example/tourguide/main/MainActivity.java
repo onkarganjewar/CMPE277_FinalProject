@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private BusinessAdapter mAdapter;
     private BusinessModel businessModel;
     private LinearLayoutManager mLayoutManager;
+    private double currentLatitude, currentLongitude;
 
 
     @Override
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         // getting the list of results from MapView
         Intent intent = getIntent();
+        currentLatitude = intent.getDoubleExtra("currentLat",0);
+        currentLongitude = intent.getDoubleExtra("currentLng",0);
         myList = (intent.<BusinessModel>getParcelableArrayListExtra("MyObj"));
 //        locationList = intent.getParcelableArrayListExtra("MyObj");
         // initialize all the elements of the view
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Nearby Attractions");
 
 //        recyclerView.setHasFixedSize(true);
-        mAdapter = new BusinessAdapter(myList,this.getApplicationContext());
+        mAdapter = new BusinessAdapter(myList,this.getApplicationContext(), currentLatitude, currentLongitude);
         mLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);

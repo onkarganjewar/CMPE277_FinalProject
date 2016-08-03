@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.tourguide.business.BusinessModel;
 import com.example.tourguide.R;
+import com.example.tourguide.main.DirectionsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.concurrent.Executor;
 public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyViewHolder> {
 
     private final Context context;
+    private final double currentLat, currentLng;
     private List<BusinessModel> locationList;
 
     // Provide a reference to the views for each data item
@@ -78,23 +80,6 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyView
                     }
                 }
             });
-/*
-            shareImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-                            "://" + getResources().getResourcePackageName(coverImageView.getId())
-                            + '/' + "drawable" + '/' + getResources().getResourceEntryName((int)coverImageView.getTag()));
-
-
-                    Intent shareIntent = new Intent();
-                    shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_STREAM,imageUri);
-                    shareIntent.setType("image/jpeg");
-                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
-                }
-            });*/
         }
 
 
@@ -129,14 +114,15 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyView
             @Override
             public void onClick(View v) {
                 // start MapView
-                Intent intent = new Intent(context,MapActivity.class);
+                Intent intent = new Intent(context,DirectionsActivity.class);
 
                 // information to set the marker options
                 intent.putStringArrayListExtra("address",businessModel.getAddress());
                 intent.putExtra("name",businessModel.getName());
                 intent.putExtra("latitude",businessModel.getLatitude());
                 intent.putExtra("longitude",businessModel.getLongitude());
-
+                intent.putExtra("currentLat",currentLat);
+                intent.putExtra("currentLng",currentLng);
                 // pass the result list as well ( to be retrieved back later; onclick of back button in MapView)
                 // kind of a workaround for application failing on back button
                 intent.putParcelableArrayListExtra("MyObj", (ArrayList<BusinessModel>) locationList);
@@ -154,9 +140,11 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.MyView
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BusinessAdapter(List<BusinessModel> myDataset, Context applicationContext) {
+    public BusinessAdapter(List<BusinessModel> myDataset, Context applicationContext, double lat, double lng) {
         locationList = myDataset;
         context = applicationContext;
+        currentLat = lat;
+        currentLng = lng;
     }
 
     @Override

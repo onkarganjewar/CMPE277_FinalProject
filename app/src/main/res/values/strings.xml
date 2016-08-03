@@ -4,5 +4,6 @@
     <string name="connected_to_foursquare">Hey looks like you’re connected to Foursquare!</string>
     <string name="app_not_installed_message">To do this, you’ll need the latest version of Foursquare installed.</string>
     <string name="title_project">TourGuide</string>
+    <string name="title_activity_directions">Location</string>
 
 </resources>

@@ -275,6 +275,7 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
             _latitude = mLastLocation.getLatitude();
             _longitude = mLastLocation.getLongitude();
             getCurrentCity();
+
             Log.d(TAG, "LATITUDE VALUE" + _latitude);
             Log.d(TAG, "LONGITUDE VALUE" + _longitude);
         } else {

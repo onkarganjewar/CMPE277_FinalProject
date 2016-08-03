@@ -97,8 +97,8 @@ public class YelpController {
             Log.d("DEBUG",temp[j]);
             // locale params
             searchParams.put("lang", "en");
-            double tempLatitude = _latitude;
-            double tempLongitude = _longitude;
+            final double tempLatitude = _latitude;
+            final double tempLongitude = _longitude;
 
             Call<SearchResponse> call = yelpAPI.search(currentCity, searchParams);
             // asynch http request for search
@@ -154,6 +154,8 @@ public class YelpController {
                     // start the new activity to display cards
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.putParcelableArrayListExtra("MyObj", (ArrayList<BusinessModel>) businessModelList);
+                    intent.putExtra("currentLat",tempLatitude);
+                    intent.putExtra("currentLng",tempLongitude);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
