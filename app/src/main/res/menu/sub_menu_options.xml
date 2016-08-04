@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:title="Settings"
+    android:id="@+id/submenu_one" />
+<item android:title="SubMenu Two"
+    android:id="@+id/submenu_two" />
+<item android:title="SubMenu Three"
+    android:id="@+id/submenu_three" />
+</menu>

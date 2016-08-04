@@ -11,11 +11,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 
 import com.example.tourguide.R;
 import com.example.tourguide.business.BusinessModel;
+import com.example.tourguide.registration.Login;
 import com.example.tourguide.view.BusinessAdapter;
+import com.example.tourguide.weather.WeatherActivity;
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.apache.log4j.chainsaw.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,15 +86,47 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+
+            case R.id.action_settings:
+                runOnUiThread(new Runnable() // run on ui thread
+                {
+                    public void run() {
+                        Intent intent = new Intent(MainActivity.this, WeatherActivity.class);
+//                        intent.putExtra("latitude",currentLatitude);
+//                        intent.putExtra("longitude",currentLongitude);
+                        startActivity(intent);
+                    }
+                });
+                Log.d("DEBUG","SETTINGS CLICKED");
+                return true;
+
+            case R.id.action_logout:
+                firebaseAuth.signOut();
+                finish();
+                startActivity(new Intent(MainActivity.this,Login.class));
+                Log.d("DEBUG","LOGOUT CLICKED");
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        menu.removeItem(R.id.action_websearch);
+//        MenuInflater inflater = getMenuInflater();
+        // Inflate your main_menu into the menu
+//        inflater.inflate(R.menu.options_menu, menu);
+//        menu.removeItem(R.id.action_websearch);
+
+        // Find the menuItem to add your SubMenu
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+//        MenuItem myMenuItem = menu.findItem(R.id.action_settings);
+//        getMenuInflater().inflate(R.menu.sub_menu_options, myMenuItem.getSubMenu());
+
+        // Inflating the sub_menu menu this way, will add its menu items
+        // to the empty SubMenu you created in the xml
+//        getMenuInflater().inflate(R.menu.sub_menu, myMenuItem.getSubMenu());
+
         return true;
     }
 }

@@ -113,6 +113,44 @@ public class DirectionsActivity extends FragmentActivity implements OnMapReadyCa
         btnDirections.setOnClickListener(this.getDirections());
 
         txtEstimate.setClickable(false);
+        txtEstimate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage("com.ubercab");
+                if (intent  == null) {
+                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
+                } else {
+                    try {
+
+                        getApplicationContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.ubercab")).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    }
+                    catch (android.content.ActivityNotFoundException anfe) {
+                        getApplicationContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.ubercab")).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    }
+                }*/
+
+                PackageManager pm = getPackageManager();
+                try {
+                    pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
+                    String uri = "uber://?action=setPickup&pickup=my_location";
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                } catch (PackageManager.NameNotFoundException e) {
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.ubercab")));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.ubercab")));
+                    }
+                }
+
+
+
+
+            }
+        });
 
     }
 /*
@@ -203,43 +241,6 @@ public class DirectionsActivity extends FragmentActivity implements OnMapReadyCa
         requestButton.setCallback(callback);
         requestButton.loadRideInformation();
     }
-/*
-    private void getUberEstimates() {
-
-        RideParameters rideParams = new RideParameters.Builder()
-                .setProductId(UBERX_PRODUCT_ID) // Optional. If not provided, the cheapest product will be used.
-                .setPickupLocation(37.775304, -122.417522, "Uber HQ", "1455 Market Street, San Francisco")
-                .setDropoffLocation(37.795079, -122.4397805, "Embarcadero", "One Embarcadero Center, San Francisco") // Price estimate will only be provided if this is provided.
-                .build();
-
-        SessionConfiguration config = new SessionConfiguration.Builder().setServerToken(SERVER_TOKEN).build();
-        ServerTokenSession session = new ServerTokenSession(config);
-
-        RideRequestButtonCallback callback = new RideRequestButtonCallback() {
-
-            @Override
-            public void onRideInformationLoaded() {
-
-            }
-
-            @Override
-            public void onError(ApiError apiError) {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-            }
-        };
-
-        requestButton.setRideParameters(rideParams);
-        requestButton.setSession(session);
-        requestButton.setCallback(callback));
-        requestButton.loadRideInformation();
-    }
-*/
-
 
     private View.OnClickListener getDirections() {
 
