@@ -61,7 +61,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.tourguide.main.MainActivity" />
         </activity>
-        <activity android:name=".main.SearchActivity" />
         <activity android:name=".registration.Sign_up" />
         <activity android:name=".weather.WeatherActivity">
             <meta-data

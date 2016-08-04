@@ -19,45 +19,56 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter email id"
-            android:textColor="@color/uber_white"
-            android:background="#BDBDBD"
-            android:alpha="0.7"
+            android:layout_height="55dp"
+            android:hint="Email"
+            android:textColorHint="#ffffff"
+            android:textColor="#ffffff"
+            android:background="#4DBDBDBD"
             android:id="@+id/Sign_in_email"
-            android:layout_centerHorizontal="true"
-            android:textIsSelectable="false"
-            android:textSize="23dp" />
+        android:layout_centerHorizontal="true"
+        android:textIsSelectable="false"
+        />
+        <!--android:alpha="0.7"-->
 
         <EditText
             android:layout_width="match_parent"
-            android:hint="Enter password"
-            android:textColor="@color/uber_white"
-            android:background="#BDBDBD"
-            android:layout_height="wrap_content"
-            android:textSize="23dp"
-            android:password="true"
-            android:alpha="0.7"
+            android:layout_height="55dp"
+            android:hint="Password"
+            android:textColorHint="#ffffff"
+            android:inputType="textPassword"
+            android:textColor="#ffffff"
+            android:background="#4DBDBDBD"
+            android:layout_marginTop="10dp"
             android:id="@+id/Sign_in_password"
             />
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
+            android:textColorHint="#ffffff"
             android:text="Sign In"
-            android:textColor="@color/uber_black_90"
-            android:alpha="0.7"
+            android:textColor="#ffffff"
+            android:background="#66BDBDBD"
+            android:layout_marginTop="10dp"
             android:id="@+id/Sign_in_button"/>
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:color="@color/uber_black"
-            android:alpha="0.7"
+            android:layout_height="55dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:background="#66BDBDBD"
+            android:layout_marginTop="10dp"
             android:text="Create Account"
             android:id="@+id/Create_account_button"/>
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_sign_in_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:background="#4DBDBDBD"
+            android:alpha="0.8"
+            android:textSize="23dp"
+            android:layout_marginTop="10dp"
             android:layout_centerInParent="true"
             android:visibility="visible"
             android:layout_gravity="center"/>

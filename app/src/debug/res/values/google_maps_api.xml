@@ -33,5 +33,5 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="google_maps_key" translatable="false">AIzaSyCJcfI16Fp5rXV0tCYHrtacfJFJsS9gJ2o</string>
+    <string name="google_maps_key" translatable="false">AIzaSyCbOR0YbMW4sprFAR5YLlAaay_5QWQwBnw</string>
 </resources>

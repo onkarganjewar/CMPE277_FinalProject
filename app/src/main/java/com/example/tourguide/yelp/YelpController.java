@@ -99,8 +99,8 @@ public class YelpController {
             searchParams.put("lang", "en");
             final double tempLatitude = _latitude;
             final double tempLongitude = _longitude;
-
-            Call<SearchResponse> call = yelpAPI.search(currentCity, searchParams);
+            Log.d("DEBUG","Latitude"+_latitude);
+            Call<SearchResponse> call = yelpAPI.search("San Jose", searchParams);
             // asynch http request for search
             Callback<SearchResponse> callback = new Callback<SearchResponse>() {
                 @Override

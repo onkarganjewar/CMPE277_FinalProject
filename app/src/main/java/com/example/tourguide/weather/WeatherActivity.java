@@ -42,6 +42,8 @@ import okhttp3.Response;
 public class WeatherActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private final String ApiKey = "0cb31db209ed3a9d21971845cb2e212b";
+    double lat = 37.8267;
+    double lng = -122.423;
     CurrentWeather mcurrentWeather;
     TextView mTemperatureLabel;
     TextView mTimeLabel;
@@ -49,7 +51,7 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
     TextView mPrecipValue;
     TextView mSummaryLabel;
     ImageView mIconImageView;
-    private double lat, lng;
+//    private double lat, lng;
     private String TAG = "Weather_Activity";
 
     // Variables to get current location
@@ -78,7 +80,7 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
 
 
 //        https://api.forecast.io/forecast/0cb31db209ed3a9d21971845cb2e212b/37.8267,-122.423
-
+        getWeather(lat, lng);
 
         if (isNetworkAvailable() && lat != 0.0) {
         }/*else {
@@ -163,8 +165,8 @@ public class WeatherActivity extends AppCompatActivity implements GoogleApiClien
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
-            lat = mLastLocation.getLatitude();
-            lng = mLastLocation.getLongitude();
+//            lat = mLastLocation.getLatitude();
+//            lng = mLastLocation.getLongitude();
             Log.d(TAG, "LATITUDE VALUE111" + lat);
             Log.d(TAG, "LONGITUDE VALUE" + lng);
             getWeather(lat, lng);

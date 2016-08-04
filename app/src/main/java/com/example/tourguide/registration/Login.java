@@ -81,7 +81,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
     final int[] setImg = {R.drawable.cafe_theme, R.drawable.likefb};
     RelativeLayout layout;
     private static int counterInterval = 0;
-    int[] drawablearray = new int[]{R.drawable.w4, R.drawable.w3, R.drawable.w1, R.drawable.w5};
+    int[] drawablearray = new int[]{R.drawable.w_7, R.drawable.w_12, R.drawable.w_13, R.drawable.w_14, R.drawable.w_15};
     private String TAG = "Search_Activity";
     private String cityName;
     private String provider;
@@ -116,7 +116,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                 .build();
         
         layout = (RelativeLayout) findViewById(R.id.myRelativeLayout);
-        layout.setBackgroundResource(R.drawable.w3);
+        layout.setBackgroundResource(R.drawable.w7);
         // sample button to initiate search
         btnSignIn = (Button) findViewById(R.id.Sign_in_button);
         btnSignup = (Button) findViewById(R.id.Create_account_button);
@@ -147,13 +147,14 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                     }
                 });
             }
-        }, 15000, 6000);
+        }, 1000, 3000);
 
         buildGoogleApiClient();
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Login.this, Sign_up.class);
+                finish();
                 startActivity(intent);
             }
         });
@@ -187,14 +188,18 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
             return;
         }
 
-        progressDialog.setMessage("Signing in...");
-        progressDialog.show();
         firebaseAuth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
+
                         if (task.isSuccessful()){
+                          progress = new ProgressDialog(Login.this);
+                            progress.setTitle("Please Wait!!");
+                            progress.setMessage("Wait!!");
+                            progress.setCancelable(true);
+                            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progress.show();
 //                            finish();
                             yelpController.performSearch(yelpAPI, getApplicationContext(), cityName, _latitude, _longitude);
 
@@ -321,6 +326,13 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                             Toast.makeText(Login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+
+                            progress = new ProgressDialog(Login.this);
+                            progress.setTitle("Please Wait!!");
+                            progress.setMessage("Wait!!");
+                            progress.setCancelable(true);
+                            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progress.show();
                             yelpController.performSearch(yelpAPI, getApplicationContext(), cityName, _latitude, _longitude);
 //                            finish();
                         }

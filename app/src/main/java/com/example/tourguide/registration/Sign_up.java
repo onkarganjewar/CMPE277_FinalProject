@@ -14,8 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.tourguide.R;
-import com.example.tourguide.main.MainActivity;
-import com.example.tourguide.main.SearchActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,7 +32,7 @@ public class Sign_up extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private RelativeLayout layout;
     private static int count = 0;
-    private int[] drawablearray = {R.drawable.w1,R.drawable.w3,R.drawable.w4,R.drawable.w5};
+    int[] drawablearray = new int[]{R.drawable.w7, R.drawable.w12, R.drawable.w13, R.drawable.w14, R.drawable.w15};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +40,13 @@ public class Sign_up extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         layout = (RelativeLayout) findViewById(R.id.signupLayout);
         progressDialog = new ProgressDialog(this);
-        layout.setBackgroundResource(R.drawable.w1);
+        layout.setBackgroundResource(R.drawable.w15);
         firebaseAuth = FirebaseAuth.getInstance();
-
         Email = (EditText) findViewById(R.id.Sign_up_email);
         Password = (EditText) findViewById(R.id.Sign_up_password);
-
         SignUp = (Button) findViewById(R.id.Sign_up_button);
 
+/*
         _t = new Timer();
 
         _t.scheduleAtFixedRate(new TimerTask() {
@@ -67,9 +64,8 @@ public class Sign_up extends AppCompatActivity {
                     }
                 });
             }
-        }, 15000, 6000);
-
-
+        }, 1000, 3000);
+*/
         SignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
