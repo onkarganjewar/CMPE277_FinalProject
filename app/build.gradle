@@ -29,17 +29,17 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    //    compile 'com.google.android.gms:play-services:9.2.1'
-    //    compile 'com.google.firebase:firebase-core:9.2.0'
-//    compile 'com.google.firebase:firebase-auth:9.2.0'
-//    compile 'com.google.firebase:firebase-database:9.2.0'
+//    compile 'com.google.android.gms:play-services:9.2.1'
+    compile 'com.google.firebase:firebase-core:9.2.0'
+    compile 'com.google.firebase:firebase-auth:9.2.0'
+    compile 'com.google.firebase:firebase-database:9.2.0'
     // https://mvnrepository.com/artifact/org.scribe/scribe
 //    compile group: 'org.scribe', name: 'scribe', version: '1.3.5'
     // https://mvnrepository.com/artifact/com.beust/jcommander
     compile group: 'com.beust', name: 'jcommander', version: '1.48'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.foursquare:foursquare-android-oauth:1.0.3'
-    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.2.0'
     compile 'com.google.android.gms:play-services-places:9.2.0'
     compile 'com.google.android.gms:play-services-location:9.2.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
@@ -51,5 +51,6 @@ dependencies {
     compile 'org.scribe:scribe:1.3.5'
     compile 'com.android.support:cardview-v7:23.4.0'
     compile 'com.uber.sdk:rides-android:0.5.2'
-    compile 'com.google.android.gms:play-services:9.4.0'
+
 }
+apply plugin: 'com.google.gms.google-services'

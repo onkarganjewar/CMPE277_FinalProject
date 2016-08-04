@@ -59,7 +59,7 @@ public class DirectionsActivity extends FragmentActivity implements OnMapReadyCa
 
     private void receiveIntents() {
             // TODO: Fix the issue with the back button
-            Intent intent = getIntent();
+        Intent intent = getIntent();
         currentLat = intent.getDoubleExtra("currentLat", 0);
         currentLng = intent.getDoubleExtra("currentLng", 0);
 
