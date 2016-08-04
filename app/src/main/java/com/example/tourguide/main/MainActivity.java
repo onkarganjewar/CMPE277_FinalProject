@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.tourguide.R;
 import com.example.tourguide.business.BusinessModel;
 import com.example.tourguide.view.BusinessAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +37,14 @@ public class MainActivity extends AppCompatActivity {
     private BusinessModel businessModel;
     private LinearLayoutManager mLayoutManager;
     private double currentLatitude, currentLongitude;
+    private FirebaseAuth firebaseAuth;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // getting the list of results from MapView
         Intent intent = getIntent();
@@ -55,9 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void _init() {
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("Nearby Attractions");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setTitle("Welcome, "+firebaseAuth.getCurrentUser().getEmail().toString());
+
 
 //        recyclerView.setHasFixedSize(true);
         mAdapter = new BusinessAdapter(myList,this.getApplicationContext(), currentLatitude, currentLongitude);

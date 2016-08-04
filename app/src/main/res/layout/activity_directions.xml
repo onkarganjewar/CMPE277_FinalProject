@@ -4,8 +4,21 @@
     android:layout_height="match_parent"
     xmlns:uber="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/directionsLayout"
     tools:context="com.example.tourguide.main.DirectionsActivity">
 
+    <Button
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:color="@color/uber_black"
+        android:alpha="0.80"
+        android:text="ESTIMATE"
+        android:id="@+id/txtEstimate"
+        />
+    <!--android:layout_toRightOf="@+id/btnDirections"-->
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

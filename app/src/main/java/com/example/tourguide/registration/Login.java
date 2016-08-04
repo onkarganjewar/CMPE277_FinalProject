@@ -95,10 +95,10 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
         progressDialog = new ProgressDialog(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
-     //   if (firebaseAuth.getCurrentUser()!=null){
-       //     finish();
-//            startActivity(new Intent(MainActivity.this,Sign_out.class));
-       // }
+//        if (firebaseAuth.getCurrentUser()!=null){
+////            finish();
+//            startActivity(new Intent(Login.this,MainActivity.class));
+//        }
 
         _t = new Timer();
         _initController();

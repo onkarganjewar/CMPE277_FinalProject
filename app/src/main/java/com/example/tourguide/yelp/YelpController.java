@@ -42,24 +42,24 @@ public class YelpController {
     private YelpAPIFactory apiFactory;
 
     // search limit for nearby attractions
-    private static final int searchLimit = 20;
+    private final int searchLimit = 20;
 
     // currently hardcoded as "active"
     // but can be filtered as per the user request, in future
-    private static final String[] searchFilter= {"active"};
+    private final String[] searchFilter= {"active"};
 
     // search parameters: "key" --> "value"
     //                    "term" --> "active"
-    private static Map<String, String> searchParams = new HashMap<>();
+    private Map<String, String> searchParams = new HashMap<>();
 
     // list to hold the search results
-    private static ArrayList<Business> businesses;
+    private ArrayList<Business> businesses;
 
-    public static List<BusinessModel> getBusinessModelList() {
+    public List<BusinessModel> getBusinessModelList() {
         return businessModelList;
     }
 
-    private static List<BusinessModel> businessModelList = new ArrayList<BusinessModel>();
+    private List<BusinessModel> businessModelList = new ArrayList<BusinessModel>();
 
     // sample strings
     private String status = "";
@@ -151,6 +151,7 @@ public class YelpController {
                         BusinessModel newObject = new BusinessModel(name,description,status,imageUrl,address,rating,phone,latitude,longitude,imageResourceId);
                         businessModelList.add(newObject);
                     }
+
                     // start the new activity to display cards
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.putParcelableArrayListExtra("MyObj", (ArrayList<BusinessModel>) businessModelList);
@@ -160,6 +161,96 @@ public class YelpController {
                     context.startActivity(intent);
                 }
 
+                @Override
+                public void onFailure(Call<SearchResponse> call, Throwable t) {
+                    // HTTP error happened, do something to handle it.
+                    // Error
+                    t.printStackTrace();
+                    Log.d("DEBUG","SEARCH FAILED");
+                    return;
+                }
+            };
+            call.enqueue(callback);
+        }
+        return 0;
+    }
+
+    public int performSearch1(YelpAPI yelpAPI, final Context context, String currentCity, double _latitude, double _longitude) {
+
+        // method to include multiple keywords for search
+        String userKeywords = "beaches";
+        String []someSTringArray = {""};
+        String[] filter = {","};
+        String[] temp = {"beaches","skydiving","artmuseums","galleries","lakes","hiking","waterparks","amusementparks"};
+        for(String eachValue : temp)
+        {
+            userKeywords = userKeywords + "," + eachValue;
+        }
+
+        // general params
+        searchParams.put("category_filter", "beaches");
+        for (int j =0 ; j<temp.length; j++) {
+            Log.d("DEBUG","Length: "+temp.length);
+            searchParams.clear();
+            searchParams.put("category_filter", temp[j]);
+            Log.d("DEBUG",temp[j]);
+            // locale params
+            searchParams.put("lang", "en");
+            final double tempLatitude = _latitude;
+            final double tempLongitude = _longitude;
+
+            Call<SearchResponse> call = yelpAPI.search(currentCity, searchParams);
+            // asynch http request for search
+            Callback<SearchResponse> callback = new Callback<SearchResponse>() {
+                @Override
+                public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+                    SearchResponse searchResponse = response.body();
+
+                    // local variables to hold the search results
+                    String name, imageUrl ,description, formattedUrl;
+                    int len;
+                    ArrayList<String> address;
+                    Double rating,latitude,longitude;
+
+                    // Update UI text with the searchResponse.
+                    businesses = searchResponse.businesses();
+                    int size = searchResponse.businesses().size();
+                    Log.d("DEBUG","SIZE: "+size);
+                    for (int i=0; i<3; i++) {
+                        name = businesses.get(i).name();
+                        Log.d("DEBUG",name);
+                        if (name.equalsIgnoreCase("Billy Beez"))
+                            continue;
+                        rating = businesses.get(i).rating();
+                        if (businesses.get(i).displayPhone() != "") {
+                            phone = businesses.get(i).phone();
+                        }
+                        latitude = businesses.get(i).location().coordinate().latitude();
+                        longitude = businesses.get(i).location().coordinate().longitude();
+                        imageUrl = businesses.get(i).imageUrl();
+                        boolean flag = businesses.get(i).isClosed();
+
+                        if (flag) {
+                            status = "closed";
+                        } else {
+                            status = "open";
+                        }
+                        address = businesses.get(i).location().displayAddress();
+                        description = businesses.get(i).snippetText();
+
+                        if (imageUrl!= null) {
+                            len = imageUrl.length();
+                            formattedUrl = imageUrl.substring(0, len - 6) + "o.jpg";
+                            imageUrl = formattedUrl;
+                            Log.i("DEBUG",formattedUrl);
+                        }// not able to implement it yet
+                        int imageResourceId = R.drawable.cafe_theme;
+
+                        // create the model for every location
+                        BusinessModel newObject = new BusinessModel(name,description,status,imageUrl,address,rating,phone,latitude,longitude,imageResourceId);
+                        businessModelList.add(newObject);
+                    }
+                }
                 @Override
                 public void onFailure(Call<SearchResponse> call, Throwable t) {
                     // HTTP error happened, do something to handle it.
