@@ -12,14 +12,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.tourguide.R;
+import com.example.tourguide.main.MainActivity;
 import com.example.tourguide.yelp.YelpController;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,6 +31,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.yelp.clientlib.connection.YelpAPI;
 
 import java.io.IOException;
@@ -42,7 +50,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
     private YelpAPI yelpAPI;
     private GoogleApiClient mGoogleApiClient;
     // UI elements
-    private Button btnGo, btnSignup;
+    private Button btnSignIn, btnSignup;
     public static int count = 0;
 
     // Variables to get current location
@@ -67,6 +75,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
     private String provider;
     private double _latitude, _longitude;
 
+    EditText Email;
+    EditText Password;
+    Button SignIn, CreateAccount;
+    private ProgressDialog progressDialog;
+    private FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,18 +88,20 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
         layout = (RelativeLayout) findViewById(R.id.myRelativeLayout);
         layout.setBackgroundResource(R.drawable.w3);
         // sample button to initiate search
-        btnGo = (Button) findViewById(R.id.Sign_in_button);
+        btnSignIn = (Button) findViewById(R.id.Sign_in_button);
         btnSignup = (Button) findViewById(R.id.Create_account_button);
+        Email = (EditText) findViewById(R.id.Sign_in_email);
+        Password = (EditText) findViewById(R.id.Sign_in_password);
+        progressDialog = new ProgressDialog(this);
 
-        btnSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, Sign_up.class);
-                startActivity(intent);
-            }
-        });
+        firebaseAuth = FirebaseAuth.getInstance();
+     //   if (firebaseAuth.getCurrentUser()!=null){
+       //     finish();
+//            startActivity(new Intent(MainActivity.this,Sign_out.class));
+       // }
 
         _t = new Timer();
+        _initController();
         _t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -101,13 +117,59 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                     }
                 });
             }
-        }, 3000, 3000);
+        }, 10000, 3000);
 
         buildGoogleApiClient();
-        // initialize the yelp controller
-        _initController();
+        btnSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, Sign_up.class);
+                startActivity(intent);
+            }
+        });
 
-        performSearch();
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                authenticateUser();
+                // show progress bar until the action completes
+            }
+        });
+    }
+
+    private void authenticateUser() {
+
+        String email = Email.getText().toString().trim();
+        String password = Password.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email)){
+            Toast.makeText(this,"Email field cannot be left blank!",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this,"Password field cannot be left blank!",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        progressDialog.setMessage("Signing in...");
+        progressDialog.show();
+        firebaseAuth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
+                        if (task.isSuccessful()){
+//                            finish();
+                            yelpController.performSearch(yelpAPI, getApplicationContext(), cityName, _latitude, _longitude);
+
+//                            startActivity(new Intent(MainActivity.this,Sign_out.class));
+                        }else {
+                            Toast.makeText(Login.this,"Incorrect username or password!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -124,25 +186,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                 .setFastestInterval(FASTEST_INTERVAL);
         mGoogleApiClient.connect();
 //        createLocationRequest();
-    }
-    private void performSearch() {
-
-        btnGo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // initiate the asynchronous search on background thread
-
-                yelpController.performSearch(yelpAPI, getApplicationContext(), cityName, _latitude, _longitude);
-
-                // show progress bar until the action completes
-                progress = new ProgressDialog(v.getContext());
-                progress.setTitle("Please Wait!!");
-                progress.setMessage("Wait!!");
-                progress.setCancelable(true);
-                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progress.show();
-            }
-        });
     }
 
     private void getCurrentCity() {
