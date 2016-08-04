@@ -67,7 +67,7 @@ public class Sign_up extends AppCompatActivity {
                     }
                 });
             }
-        }, 10000, 3000);
+        }, 15000, 6000);
 
 
         SignUp.setOnClickListener(new View.OnClickListener() {
@@ -101,9 +101,8 @@ public class Sign_up extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(Sign_up.this, "User registered successfully!", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(Sign_up.this, SearchActivity.class));
+                            startActivity(new Intent(Sign_up.this, Login.class));
                         }else {
-
                             Log.d("DEBUG","Exception: "+task.getException());
                             progressDialog.dismiss();
                             Toast.makeText(Sign_up.this, "Registration failed!", Toast.LENGTH_SHORT).show();

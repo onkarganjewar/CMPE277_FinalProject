@@ -117,7 +117,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                     }
                 });
             }
-        }, 10000, 3000);
+        }, 15000, 6000);
 
         buildGoogleApiClient();
         btnSignup.setOnClickListener(new View.OnClickListener() {
